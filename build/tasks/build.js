@@ -16,16 +16,24 @@ gulp.task('build-src', function () {
   return gulp.src(paths.src)
   .pipe(plumber())
   .pipe(changed(paths.output, {extension: '.js'}))
-  //.pipe(sourcemaps.init())
+    //.pipe(sourcemaps.init())
   .pipe(babel(assign({}, compilerOptions, {modules:'system'})))
-  //.pipe(sourcemaps.write({includeContent: false, sourceRoot: '/' + paths.root }))
+    //.pipe(sourcemaps.write({includeContent: false, sourceRoot: '/' + paths.root }))
   .pipe(gulp.dest(paths.output));
 });
+
+// copies changed html files to the output directory
+gulp.task('build-html', function () {
+  return gulp.src(paths.html)
+  .pipe(changed(paths.output, {extension: '.html'}))
+  .pipe(gulp.dest(paths.output));
+});
+
 
 // this task calls the clean task (located
 // in ./clean.js), then runs the build-system
 // and build-html tasks in parallel
 // https://www.npmjs.com/package/gulp-run-sequence
 gulp.task('build', function(callback) {
-  return runSequence('clean',['build-src'],callback);
+  return runSequence('clean',['build-src','build-html'],callback);
 });

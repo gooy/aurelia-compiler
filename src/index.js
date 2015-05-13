@@ -1,6 +1,6 @@
 import {ViewCompiler,ViewResources,ViewSlot,ViewEngine, ResourceRegistry, Container} from 'aurelia-framework';
 
-import {DefaultLoader} from 'aurelia-loader-default';
+import {DefaultLoader} from 'github:aurelia/loader-default';
 
 /**
  * Compiler service
