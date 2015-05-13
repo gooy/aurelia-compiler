@@ -1,4 +1,4 @@
-System.register(['aurelia-framework', 'github:aurelia/loader-default'], function (_export) {
+System.register(['aurelia-framework', 'aurelia-loader-default'], function (_export) {
   var ViewCompiler, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, _classCallCheck, _createClass, Compiler;
 
   function templateFromElement(element) {
@@ -14,8 +14,8 @@ System.register(['aurelia-framework', 'github:aurelia/loader-default'], function
       ViewEngine = _aureliaFramework.ViewEngine;
       ResourceRegistry = _aureliaFramework.ResourceRegistry;
       Container = _aureliaFramework.Container;
-    }, function (_githubAureliaLoaderDefault) {
-      DefaultLoader = _githubAureliaLoaderDefault.DefaultLoader;
+    }, function (_aureliaLoaderDefault) {
+      DefaultLoader = _aureliaLoaderDefault.DefaultLoader;
     }],
     execute: function () {
       'use strict';
