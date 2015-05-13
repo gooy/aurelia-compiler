@@ -1,7 +1,10 @@
 System.config({
   "transpiler": "babel",
   "babelOptions": {
-    "stage": 0
+    "stage": 0,
+    "optional": [
+      "runtime"
+    ]
   },
   "paths": {
     "*": "*.js",
@@ -18,6 +21,7 @@ System.config({
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.6.0",
     "aurelia-framework": "github:aurelia/framework@0.10.0",
     "aurelia-http-client": "github:aurelia/http-client@0.7.0",
+    "aurelia-loader-default": "github:aurelia/loader-default@0.7.0",
     "aurelia-router": "github:aurelia/router@0.7.2",
     "aurelia/bootstrapper": "github:aurelia/bootstrapper@0.11.0",
     "aurelia/dependency-injection": "github:aurelia/dependency-injection@0.6.0",
@@ -32,12 +36,9 @@ System.config({
     "core-js": "npm:core-js@0.8.4",
     "css": "github:systemjs/plugin-css@0.1.9",
     "font-awesome": "npm:font-awesome@4.3.0",
-
     "jquery-ui": "github:components/jqueryui@1.11.4",
-
     "prism": "github:PrismJS/prism@master",
     "showdown": "github:showdownjs/showdown@0.4.0",
-
     "text": "github:systemjs/plugin-text@0.0.2",
     "github:aurelia/animator-css@0.1.0": {
       "aurelia-templating": "github:aurelia/templating@0.10.3"
@@ -90,14 +91,27 @@ System.config({
       "aurelia-loader": "github:aurelia/loader@0.5.0",
       "aurelia-metadata": "github:aurelia/metadata@0.4.0"
     },
+    "github:aurelia/loader-default@0.7.0": {
+      "aurelia-loader": "github:aurelia/loader@0.6.0",
+      "aurelia-metadata": "github:aurelia/metadata@0.5.0"
+    },
     "github:aurelia/loader@0.5.0": {
       "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
       "aurelia-path": "github:aurelia/path@0.5.0",
       "core-js": "npm:core-js@0.8.4",
       "webcomponentsjs": "github:webcomponents/webcomponentsjs@0.5.5"
     },
+    "github:aurelia/loader@0.6.0": {
+      "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
+      "aurelia-path": "github:aurelia/path@0.6.1",
+      "core-js": "npm:core-js@0.9.8",
+      "webcomponentsjs": "github:webcomponents/webcomponentsjs@0.6.1"
+    },
     "github:aurelia/metadata@0.4.0": {
       "core-js": "npm:core-js@0.8.4"
+    },
+    "github:aurelia/metadata@0.5.0": {
+      "core-js": "npm:core-js@0.9.8"
     },
     "github:aurelia/route-recognizer@0.3.0": {
       "core-js": "npm:core-js@0.8.4"
@@ -350,6 +364,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:core-js@0.8.4": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
+    },
+    "npm:core-js@0.9.8": {
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:core-util-is@1.0.1": {
