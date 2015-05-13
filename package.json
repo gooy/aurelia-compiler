@@ -1,6 +1,7 @@
 {
   "name": "aurelia-compiler",
   "version": "0.0.1",
+  "registry": "jspm",
   "repository": {
     "type": "git",
     "url": "git@github.com:gooy/aurelia-compiler.git"
@@ -15,7 +16,6 @@
     "email": "aaikevr@gmail.com"
   },
   "license": "MIT",
-  "registry": "jspm",
   "directories": {
     "lib": "src",
     "build": "dist"

@@ -16,9 +16,9 @@ gulp.task('build-src', function () {
   return gulp.src(paths.src)
   .pipe(plumber())
   .pipe(changed(paths.output, {extension: '.js'}))
-  .pipe(sourcemaps.init())
+  //.pipe(sourcemaps.init())
   .pipe(babel(assign({}, compilerOptions, {modules:'system'})))
-  .pipe(sourcemaps.write({includeContent: false, sourceRoot: '/' + paths.root }))
+  //.pipe(sourcemaps.write({includeContent: false, sourceRoot: '/' + paths.root }))
   .pipe(gulp.dest(paths.output));
 });
 

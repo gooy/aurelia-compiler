@@ -1,10 +1,7 @@
 System.config({
   "transpiler": "babel",
   "babelOptions": {
-    "stage": 0,
-    "optional": [
-      "runtime"
-    ]
+    "stage": 0
   },
   "paths": {
     "*": "*.js",
@@ -35,14 +32,12 @@ System.config({
     "core-js": "npm:core-js@0.8.4",
     "css": "github:systemjs/plugin-css@0.1.9",
     "font-awesome": "npm:font-awesome@4.3.0",
-    "gooy/string": "github:gooy/string@0.0.1",
+
     "jquery-ui": "github:components/jqueryui@1.11.4",
-    "js-beautify": "github:beautify-web/js-beautify@1.5.5",
-    "malihu-custom-scrollbar-plugin": "github:malihu/malihu-custom-scrollbar-plugin@3.0.8",
-    "malihu/malihu-custom-scrollbar-plugin": "github:malihu/malihu-custom-scrollbar-plugin@3.0.8",
-    "oidc-client": "github:IdentityModel/oidc-client@0.2.1",
+
     "prism": "github:PrismJS/prism@master",
     "showdown": "github:showdownjs/showdown@0.4.0",
+
     "text": "github:systemjs/plugin-text@0.0.2",
     "github:aurelia/animator-css@0.1.0": {
       "aurelia-templating": "github:aurelia/templating@0.10.3"

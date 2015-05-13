@@ -1,17 +1,20 @@
 import {ViewCompiler,ViewResources,ViewSlot,ViewEngine, ResourceRegistry, Container} from 'aurelia-framework';
 
+import {DefaultLoader} from 'aurelia-loader-default';
+
 /**
  * Compiler service
  *
- * Compiles an HTML element with aurelia behaviors
+ * compiles an HTML element with aurelia
  */
 export class Compiler {
-  static inject() {return [ViewCompiler, ViewEngine,ResourceRegistry, Container]}
-  constructor(compiler, viewEngine, appResources, diContainer) {
+  static inject() {return [ViewCompiler, ViewEngine,ResourceRegistry, Container,DefaultLoader]}
+  constructor(compiler, viewEngine, resources, container,loader) {
     this.compiler = compiler;
     this.viewEngine = viewEngine;
-    this.resources = appResources;
-    this.container = diContainer;
+    this.resources = resources;
+    this.container = container;
+    this.loader = loader;
   }
 
   /**
@@ -25,9 +28,8 @@ export class Compiler {
    */
   compile(element, ctx = null) {
     element.classList.remove('au-target');
-    let containerElement = element.parentNode;
-    let slot = new ViewSlot(containerElement, true);
-    let tpl = this.templateFromElement(element);
+    let slot = new ViewSlot(element.parentNode||element, true);
+    let tpl = templateFromElement(element);
 
     var view = this.compiler.compile(tpl, this.resources).create(this.container, ctx);
     slot.add(view);
@@ -51,18 +53,16 @@ export class Compiler {
       return Promise.resolve(entry);
     }
   }
-
-  /**
-   * Create a template from a regular element.
-   *
-   * @param element
-   * @returns {*}
-   */
-  templateFromElement(element) {
-    var tpl = document.createElement('template');
-    tpl.content.appendChild(element);
-    return tpl;
-  }
-
 }
 
+/**
+ * Create a template from a regular element.
+ *
+ * @param element
+ * @returns {*}
+ */
+function templateFromElement(element) {
+  var tpl = document.createElement('template');
+  tpl.content.appendChild(element);
+  return tpl;
+}
