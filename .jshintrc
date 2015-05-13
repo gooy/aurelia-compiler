@@ -1,0 +1,29 @@
+{
+  "bitwise": true,
+  "eqeqeq": true,
+  "forin": true,
+  "freeze": true,
+  "globalstrict": false,
+  "latedef": "nofunc",
+  "noarg": true,
+  "nonbsp": true,
+  "nonew": true,
+  "notypeof": false,
+  "shadow": false,
+  "undef": true,
+  "unused": true,
+
+  "strict": false,
+  "esnext": true,
+  "eqnull": true,
+  "browser": true,
+
+  "devel": false,
+  "jquery": false,
+  "debug": false,
+
+  "globals": {
+    "Promise": true,
+    "System": true
+  }
+}
