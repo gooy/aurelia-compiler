@@ -14,10 +14,12 @@ inject the service and use it.
 import {Compiler} from 'gooy/aurelia-compiler';
 
 export class Test(){
-  static inject = [Compiler];
-  constructor(compiler) {
-    
-    compiler.compile(el);
+  static inject = [Element,Compiler];
+  constructor(element,compiler) {
+    this.element = element;
+    var markdown = document.createElement("markdown");
+    this.element.appendChild(markdown);
+    compiler.compile(markdown);
   }
 }
 ```
