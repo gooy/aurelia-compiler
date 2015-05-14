@@ -30,7 +30,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
 
           this.compiler = compiler;
           this.viewEngine = viewEngine;
-          this.resources = resources;
+          this.resources = new ViewResources(resources);
           this.container = container;
           this.loader = loader;
         }
