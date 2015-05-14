@@ -12,7 +12,7 @@ export class Compiler {
   constructor(compiler, viewEngine, resources, container,loader) {
     this.compiler = compiler;
     this.viewEngine = viewEngine;
-    this.resources = resources;
+    this.resources = new ViewResources(resources);
     this.container = container;
     this.loader = loader;
   }
@@ -31,7 +31,7 @@ export class Compiler {
     let slot = new ViewSlot(element.parentNode||element, true);
     let tpl = templateFromElement(element);
 
-    var view = this.compiler.compile(tpl, new ViewResources(this.resources)).create(this.container, ctx);
+    var view = this.compiler.compile(tpl, this.resources).create(this.container, ctx);
     slot.add(view);
     slot.attached();
     return slot;
