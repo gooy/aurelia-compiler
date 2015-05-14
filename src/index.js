@@ -31,7 +31,7 @@ export class Compiler {
     let slot = new ViewSlot(element.parentNode||element, true);
     let tpl = templateFromElement(element);
 
-    var view = this.compiler.compile(tpl, this.resources).create(this.container, ctx);
+    var view = this.compiler.compile(tpl, new ViewResources(this.resources)).create(this.container, ctx);
     slot.add(view);
     slot.attached();
     return slot;
