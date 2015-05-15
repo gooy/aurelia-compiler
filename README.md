@@ -4,11 +4,11 @@ A compiler service that compiles an HTML element with aurelia behaviors.
 
 ## Installation
 
-    jspm install gooy/aurelia-compiler
+    jspm install github:gooy/aurelia-compiler
 
 ## Usage
 
-inject the service and use it.
+Inject the service and use it.
 
 ```javascript
 import {Compiler} from 'gooy/aurelia-compiler';
