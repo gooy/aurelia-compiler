@@ -19,7 +19,7 @@ export class Compiler {
   }
 
   composeElement(element,ctx, instruction) {
-    instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element.parentNode||element, true);
+    instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element, true);
     return this.processInstruction(ctx,instruction);
   }
 
