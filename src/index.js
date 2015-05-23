@@ -1,4 +1,4 @@
-import {ViewCompiler,ViewResources,ViewSlot,ViewEngine, ResourceRegistry, Container} from 'aurelia-framework';
+import {ViewCompiler,CompositionEngine,ViewResources,ViewSlot,ViewEngine, ResourceRegistry, Container} from 'aurelia-framework';
 
 import {DefaultLoader} from 'aurelia-loader-default';
 
@@ -8,13 +8,19 @@ import {DefaultLoader} from 'aurelia-loader-default';
  * compiles an HTML element with aurelia
  */
 export class Compiler {
-  static inject() {return [ViewCompiler, ViewEngine,ResourceRegistry, Container,DefaultLoader]}
-  constructor(compiler, viewEngine, resources, container,loader) {
-    this.compiler = compiler;
+  static inject() {return [ViewCompiler, CompositionEngine,ViewEngine,ResourceRegistry, Container,DefaultLoader]}
+  constructor(viewCompiler, compositionEngine,viewEngine, resources, container,loader) {
+    this.viewCompiler = viewCompiler;
     this.viewEngine = viewEngine;
+    this.compositionEngine = compositionEngine;
     this.resources = new ViewResources(resources);
     this.container = container;
     this.loader = loader;
+  }
+
+  composeElement(element,ctx, instruction) {
+    instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element.parentNode||element, true);
+    return this.processInstruction(ctx,instruction);
   }
 
   /**
@@ -27,11 +33,12 @@ export class Compiler {
    * @returns {ViewSlot}
    */
   compile(element, ctx = null) {
+    console.log('Compiler.compile', ctx);
+    console.log('Compiler.resources', this.resources);
     element.classList.remove('au-target');
     let slot = new ViewSlot(element.parentNode||element, true);
     let tpl = templateFromElement(element);
-
-    var view = this.compiler.compile(tpl, this.resources).create(this.container, ctx);
+    var view = this.viewCompiler.compile(tpl, this.resources).create(this.container, ctx);
     slot.add(view);
     slot.attached();
     return slot;
@@ -53,6 +60,21 @@ export class Compiler {
       return Promise.resolve(entry);
     }
   }
+
+  processInstruction(ctx, instruction){
+
+    instruction.container = instruction.container||ctx.container||this.container;
+    instruction.executionContext = instruction.executionContext||ctx.executionContext||this.executionContext;
+    instruction.viewSlot = instruction.viewSlot||ctx.viewSlot||this.viewSlot;
+    instruction.viewResources = instruction.viewResources||ctx.viewResources||this.viewResources;
+    instruction.currentBehavior = instruction.currentBehavior||ctx.currentBehavior||this.currentBehavior;
+
+    return this.compositionEngine.compose(instruction).then(next => {
+      ctx.currentBehavior = next;
+      ctx.currentViewModel = next ? next.executionContext : null;
+    });
+  }
+
 }
 
 /**
