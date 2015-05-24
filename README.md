@@ -31,12 +31,18 @@ export class Test(){
 
 This function allows you to compose an existing element with a new instruction.
 
+It can be used to create View Models without a view (@noView) and then specify a view for it dynamically.
+
 Below as an example of one of it's use cases:
 
 
 ```markup
 <modal view="foundation-modal.html"></modal>
 ```
+
+The markup is just a modal custom element, but you can specify the `view` that will be used for it.
+The view is composed using an instruction that attaches itself to the existing VM.
+
 
 ```javascript
 import {bindable,noView} from 'aurelia-framework';
@@ -51,8 +57,13 @@ export class ModalCustomElement{
         this.compiler = compiler;
         this.element = element;
     }
-    bind(){
-         this.compiler.composeElement(this.element,this,{view:this.view});
+    
+    attached(){
+      this.compiler.composeElement(this.element,this,{view:this.view});
     }
 }
 ```
+
+Note: It's best to compose the element in the `attached` handler.
+
+There are multiple ways the `composeElement` function can be used, more use examples of it will be added later.
