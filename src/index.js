@@ -19,7 +19,7 @@ export class Compiler {
   }
 
   composeElement(element,ctx, instruction) {
-    instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element, true);
+    instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element, true,ctx);
     return this.processInstruction(ctx,instruction);
   }
 
@@ -33,8 +33,6 @@ export class Compiler {
    * @returns {ViewSlot}
    */
   compile(element, ctx = null) {
-    console.log('Compiler.compile', ctx);
-    console.log('Compiler.resources', this.resources);
     element.classList.remove('au-target');
     let slot = new ViewSlot(element.parentNode||element, true);
     let tpl = templateFromElement(element);
@@ -64,7 +62,7 @@ export class Compiler {
   processInstruction(ctx, instruction){
 
     instruction.container = instruction.container||ctx.container||this.container;
-    instruction.executionContext = instruction.executionContext||ctx.executionContext||this.executionContext;
+    instruction.executionContext = instruction.executionContext||ctx.executionContext||ctx||this.executionContext;
     instruction.viewSlot = instruction.viewSlot||ctx.viewSlot||this.viewSlot;
     instruction.viewResources = instruction.viewResources||ctx.viewResources||this.viewResources;
     instruction.currentBehavior = instruction.currentBehavior||ctx.currentBehavior||this.currentBehavior;
