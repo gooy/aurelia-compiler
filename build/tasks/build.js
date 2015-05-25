@@ -7,13 +7,15 @@ var sourcemaps = require('gulp-sourcemaps');
 var paths = require('../paths');
 var compilerOptions = require('../babel-options');
 var assign = Object.assign || require('object.assign');
+var del = require('del');
+var vinylPaths = require('vinyl-paths');
 
 // transpiles changed es6 files to SystemJS format
 // the plumber() call prevents 'pipe breaking' caused
 // by errors from other gulp plugins
 // https://www.npmjs.com/package/gulp-plumber
-gulp.task('build-src', function () {
-  return gulp.src(paths.src)
+gulp.task('build-system', function () {
+  return gulp.src(paths.source)
   .pipe(plumber())
   .pipe(changed(paths.output, {extension: '.js'}))
     //.pipe(sourcemaps.init())
@@ -35,5 +37,11 @@ gulp.task('build-html', function () {
 // and build-html tasks in parallel
 // https://www.npmjs.com/package/gulp-run-sequence
 gulp.task('build', function(callback) {
-  return runSequence('clean',['build-src','build-html'],callback);
+  return runSequence('clean',['build-system','build-html'],callback);
+});
+
+// deletes all files in the output path
+gulp.task('clean', function() {
+  return gulp.src([paths.output])
+  .pipe(vinylPaths(del));
 });

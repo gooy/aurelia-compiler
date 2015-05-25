@@ -48,8 +48,6 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
           value: function compile(element) {
             var ctx = arguments[1] === undefined ? null : arguments[1];
 
-            console.log('Compiler.compile', ctx);
-            console.log('Compiler.resources', this.resources);
             element.classList.remove('au-target');
             var slot = new ViewSlot(element.parentNode || element, true);
             var tpl = templateFromElement(element);
@@ -77,7 +75,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
           value: function processInstruction(ctx, instruction) {
 
             instruction.container = instruction.container || ctx.container || this.container;
-            instruction.executionContext = instruction.executionContext || ctx.executionContext || this.executionContext;
+            instruction.executionContext = instruction.executionContext || ctx.executionContext || ctx || this.executionContext;
             instruction.viewSlot = instruction.viewSlot || ctx.viewSlot || this.viewSlot;
             instruction.viewResources = instruction.viewResources || ctx.viewResources || this.viewResources;
             instruction.currentBehavior = instruction.currentBehavior || ctx.currentBehavior || this.currentBehavior;
