@@ -1,6 +1,6 @@
 {
   "name": "aurelia-compiler",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "registry": "jspm",
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "aurelia-tools": "^0.1.0",
     "browser-sync": "^1.8.1",
     "compression": "^1.4.2",
     "conventional-changelog": "0.0.11",
@@ -36,11 +37,14 @@
     "filesize": "^3.1.2",
     "gulp": "^3.6.0",
     "gulp-babel": "^5.0.11",
+    "gulp-bump": "^0.1.11",
     "gulp-changed": "^1.2.1",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.5.2",
     "gulp-jshint": "^1.9.2",
     "gulp-plumber": "^1.0.0",
+    "gulp-yuidoc": "^0.1.2",
+    "gulp-protractor": "^0.0.12",
     "gulp-rename": "^1.2.0",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-uglify": "^1.1.0",
@@ -71,8 +75,19 @@
       "aurelia-loader-default": "github:aurelia/loader-default@^0.7.0"
     },
     "devDependencies": {
+      "aurelia-animator-css": "github:aurelia/animator-css@^0.2.0",
+      "aurelia-bootstrapper": "github:aurelia/bootstrapper@^0.12.0",
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.7.0",
+      "aurelia-framework": "github:aurelia/framework@^0.11.0",
+      "aurelia-http-client": "github:aurelia/http-client@^0.8.0",
+      "aurelia-router": "github:aurelia/router@^0.8.0",
+      "gooy/aurelia-markdown": "github:gooy/aurelia-markdown@^0.0.1",
       "babel": "npm:babel-core@^5.1.13",
-      "babel-runtime": "npm:babel-runtime@^5.1.13"
+      "babel-runtime": "npm:babel-runtime@^5.1.13",
+      "bootstrap": "github:twbs/bootstrap@^3.3.4",
+      "core-js": "npm:core-js@^0.9.4",
+      "css": "github:systemjs/plugin-css@^0.1.9",
+      "font-awesome": "npm:font-awesome@^4.3.0"
     }
   }
 }
