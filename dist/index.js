@@ -40,7 +40,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
         _createClass(Compiler, [{
           key: 'composeElement',
           value: function composeElement(element, ctx, instruction) {
-            instruction.viewSlot = instruction.viewSlot || new ViewSlot(element, true);
+            instruction.viewSlot = instruction.viewSlot || new ViewSlot(element, true, ctx);
             return this.processInstruction(ctx, instruction);
           }
         }, {
