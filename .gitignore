@@ -2,6 +2,9 @@ jspm_packages
 node_modules
 npm-debug.log
 config.js
+test
+.tmp
+.bkp
 
 # IDE generated files #
 #######################
