@@ -1,17 +1,20 @@
-System.register(['aurelia-framework', 'aurelia-loader-default'], function (_export) {
+System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'], function (_export) {
   'use strict';
 
-  var ViewCompiler, CompositionEngine, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, Compiler;
+  var ViewCompiler, CompositionEngine, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, TemplateRegistryEntry, Compiler;
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function templateFromElement(element) {
-    var tpl = document.createElement('template');
-    tpl.content.appendChild(element);
-    return tpl;
+  function ensureRegistryEntry(loader, urlOrRegistryEntry) {
+    if (urlOrRegistryEntry instanceof TemplateRegistryEntry) {
+      return Promise.resolve(urlOrRegistryEntry);
+    }
+
+    return loader.loadTemplate(urlOrRegistryEntry);
   }
+
   return {
     setters: [function (_aureliaFramework) {
       ViewCompiler = _aureliaFramework.ViewCompiler;
@@ -23,6 +26,8 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
       Container = _aureliaFramework.Container;
     }, function (_aureliaLoaderDefault) {
       DefaultLoader = _aureliaLoaderDefault.DefaultLoader;
+    }, function (_aureliaLoader) {
+      TemplateRegistryEntry = _aureliaLoader.TemplateRegistryEntry;
     }],
     execute: function () {
       Compiler = (function () {
@@ -44,27 +49,169 @@ System.register(['aurelia-framework', 'aurelia-loader-default'], function (_expo
             return this.processInstruction(ctx, instruction);
           }
         }, {
+          key: 'loadTemplate',
+          value: function loadTemplate(urlOrRegistryEntry, associatedModuleId, data) {
+            var _this = this;
+
+            return ensureRegistryEntry(this.loader, urlOrRegistryEntry).then(function (viewRegistryEntry) {
+              if (viewRegistryEntry.isReady) {
+                return viewRegistryEntry.factory;
+              }
+
+              return _this.viewEngine.loadTemplateResources(viewRegistryEntry, associatedModuleId).then(function (resources) {
+                if (viewRegistryEntry.isReady) {
+                  return viewRegistryEntry.factory;
+                }
+
+                viewRegistryEntry.setResources(resources);
+
+                return { template: viewRegistryEntry.template, data: data };
+              });
+            });
+          }
+        }, {
+          key: 'composeBehavior',
+          value: function composeBehavior(container, instruction, ctx) {
+            var element = container.get(Element);
+
+            var behavior = element.primaryBehavior;
+
+            element.innerHTML = '';
+
+            if (!behavior) return;
+            var viewSlot = container.get(ViewSlot);
+
+            instruction.viewSlot = viewSlot;
+            instruction.viewModel = behavior;
+            var context = ctx || container.executionContext;
+            instruction.executionContext = context;
+
+            return this.processInstruction(context, instruction).then(function (viewFactory) {
+              behavior.behavior.viewFactory = viewFactory;
+              viewSlot.bind(context);
+            });
+          }
+        }, {
+          key: 'loadText',
+          value: function loadText(view) {
+            return this.loader.loadText(view);
+          }
+        }, {
+          key: 'loadViewFactory',
+          value: function loadViewFactory(view) {
+            return this.viewEngine.loadViewFactory(view);
+          }
+        }, {
+          key: 'composeViewFactory',
+          value: function composeViewFactory(container, ctx, viewFactory) {
+            var viewSlot = container.get(ViewSlot);
+            viewSlot.removeAll();
+            viewSlot.swap(viewFactory.create(container, ctx));
+          }
+        }, {
+          key: 'processElementContents',
+          value: function processElementContents(element) {
+            var behavior = this.element.primaryBehavior;
+
+            if (!behavior) return;
+
+            if (behavior.viewFactory) return;
+
+            var fragment = document.createDocumentFragment();
+            var c = document.createElement('div');
+            c.innerHTML = this.element.innerHTML;
+            fragment.appendChild(c);
+
+            this.element.innerHTML = '';
+
+            var viewFactory = this.viewCompiler.compile(fragment, this.resources);
+            behavior.behavior.viewFactory = viewFactory;
+
+            var view = viewFactory.create(this.container, behavior.executionContext);
+
+            this.viewSlot.add(view);
+            this.viewAttached();
+          }
+        }, {
+          key: 'processBehavior',
+          value: function processBehavior(container) {
+            var element = container.get(Element);
+
+            var i, l;
+
+            var behavior = element.primaryBehavior;
+
+            if (!behavior) return;
+
+            if (behavior.viewFactory) return;
+
+            var viewSlot = container.get(ViewSlot);
+            var resources = container.get(ViewResources);
+
+            var fragment = document.createDocumentFragment();
+
+            var c = document.createElement('div');
+            c.innerHTML = element.innerHTML;
+
+            for (i = 0, l = c.children.length; i < l; i++) {
+              var child = c.children[i];
+              if (child) fragment.appendChild(child);
+            }
+
+            var targets = fragment.querySelectorAll('.au-target');
+            for (i = 0, l = targets.length; i < l; i++) {
+              var target = targets[i];
+              target.classList.remove('au-target');
+            }
+
+            element.innerHTML = '';
+
+            var viewFactory = this.viewCompiler.compile(fragment, resources);
+            behavior.behavior.viewFactory = viewFactory;
+
+            var view = viewFactory.create(container, behavior.executionContext.executionContext || behavior.executionContext);
+            viewSlot.add(view);
+          }
+        }, {
           key: 'compile',
           value: function compile(element) {
             var ctx = arguments[1] === undefined ? null : arguments[1];
 
             element.classList.remove('au-target');
-            var slot = new ViewSlot(element.parentNode || element, true);
-            var tpl = templateFromElement(element);
-            var view = this.viewCompiler.compile(tpl, this.resources).create(this.container, ctx);
+            var slot = new ViewSlot(element, true);
+
+            var fragment = document.createDocumentFragment();
+            var c = document.createElement('div');
+            c.innerHTML = element.innerHTML;
+            fragment.appendChild(c);
+
+            var view = this.viewCompiler.compile(fragment, this.resources).create(this.container, ctx);
             slot.add(view);
             slot.attached();
             return slot;
           }
         }, {
+          key: 'compile2',
+          value: function compile2(element) {
+            var ctx = arguments[1] === undefined ? null : arguments[1];
+            var viewSlot = arguments[2] === undefined ? null : arguments[2];
+            var template = arguments[3] === undefined ? null : arguments[3];
+
+            element.classList.remove('au-target');
+            var view = this.viewCompiler.compile(template, this.resources).create(this.container, ctx);
+            viewSlot.add(view);
+            if (ctx.viewAttached) ctx.viewAttached();
+            return viewSlot;
+          }
+        }, {
           key: 'loadVM',
           value: function loadVM(moduleId) {
-            var _this = this;
+            var _this2 = this;
 
             var entry = this.loader.moduleRegistry[moduleId];
             if (!entry) {
               return this.viewEngine.importViewResources([moduleId], [], this.resources).then(function (resources) {
-                return _this.viewEngine.importViewModelResource(moduleId);
+                return _this2.viewEngine.importViewModelResource(moduleId);
               });
             } else {
               return Promise.resolve(entry);
