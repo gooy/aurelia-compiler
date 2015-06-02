@@ -1,7 +1,7 @@
-System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'], function (_export) {
+System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader', 'aurelia-templating/content-selector'], function (_export) {
   'use strict';
 
-  var ViewCompiler, CompositionEngine, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, TemplateRegistryEntry, Compiler;
+  var ViewCompiler, CompositionEngine, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, TemplateRegistryEntry, ContentSelector, Compiler;
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -14,7 +14,6 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
 
     return loader.loadTemplate(urlOrRegistryEntry);
   }
-
   return {
     setters: [function (_aureliaFramework) {
       ViewCompiler = _aureliaFramework.ViewCompiler;
@@ -28,6 +27,8 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
       DefaultLoader = _aureliaLoaderDefault.DefaultLoader;
     }, function (_aureliaLoader) {
       TemplateRegistryEntry = _aureliaLoader.TemplateRegistryEntry;
+    }, function (_aureliaTemplatingContentSelector) {
+      ContentSelector = _aureliaTemplatingContentSelector.ContentSelector;
     }],
     execute: function () {
       Compiler = (function () {
@@ -43,35 +44,129 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
         }
 
         _createClass(Compiler, [{
-          key: 'composeElement',
-          value: function composeElement(element, ctx, instruction) {
+          key: 'swapView',
+          value: function swapView(container, view, transformer) {
+
+            var element = container.get(Element);
+            var behavior = element.primaryBehavior;
+
+            if (!behavior.originalFragment) {
+              var odata = element.innerHTML;
+              if (transformer) odata = transformer(element, element.innerHTML);
+              behavior.originalFragment = this.createFragment(odata);
+            }
+
+            return this.loadTemplate(view).then(function (entry) {
+              var template = entry.template;
+
+              var data = '';
+              for (var i = 0, l = template.content.children.length; i < l; i++) {
+                var child = template.content.children[i];
+                if (child) data += child.outerHTML;
+              }
+
+              if (transformer) data = transformer(element, data);
+
+              element.innerHTML = data;
+
+              return behavior;
+            });
+          }
+        }, {
+          key: 'createFragment',
+          value: function createFragment(element) {
+            var fragment = document.createDocumentFragment();
+
+            var c = document.createElement('div');
+            c.innerHTML = element instanceof HTMLElement ? element.innerHTML : element;
+
+            var currentChild = c.firstChild,
+                nextSibling;
+            while (currentChild) {
+              nextSibling = currentChild.nextSibling;
+              switch (currentChild.nodeType) {
+                case 1:
+                  fragment.appendChild(currentChild);
+                  break;
+              }
+              currentChild = nextSibling;
+            }
+
+            return fragment;
+          }
+        }, {
+          key: 'processBehavior',
+          value: function processBehavior(container, ctx) {
+            var element = container.get(Element);
+
+            var behavior = element.primaryBehavior;
+
+            if (!behavior) return;
+
+            if (behavior.viewFactory) return;
+
+            behavior.isAttached = false;
+
+            var viewSlot = container.get(ViewSlot);
+            var resources = container.get(ViewResources);
+
+            var fragment = this.createFragment(element);
+
+            var targets = fragment.querySelectorAll('.au-target');
+            for (var i = 0, l = targets.length; i < l; i++) {
+              var target = targets[i];
+              target.classList.remove('au-target');
+            }
+
+            var viewFactory = behavior.behavior.viewFactory = this.viewCompiler.compile(fragment, resources);
+
+            element.innerHTML = '';
+
+            var view = viewFactory.create(container, ctx || behavior.executionContext);
+            viewSlot.add(view);
+            viewSlot.attached();
+
+            behavior.view = view;
+
+            ContentSelector.applySelectors({ fragment: behavior.originalFragment }, view.contentSelectors, function (contentSelector, group) {
+              return contentSelector.add(group);
+            });
+            behavior.contentView = behavior.originalView;
+
+            return behavior;
+          }
+        }, {
+          key: 'compile',
+          value: function compile(element) {
+            var ctx = arguments[1] === undefined ? null : arguments[1];
+            var viewSlot = arguments[2] === undefined ? null : arguments[2];
+            var templateOrFragment = arguments[3] === undefined ? null : arguments[3];
+
+            element.classList.remove('au-target');
+
+            if (!templateOrFragment) {
+              var templateOrFragment = document.createDocumentFragment();
+              var c = document.createElement('div');
+              c.innerHTML = element.innerHTML;
+              templateOrFragment.appendChild(c);
+            }
+            var view = this.viewCompiler.compile(templateOrFragment, this.resources).create(this.container, ctx);
+
+            if (!viewSlot) viewSlot = new ViewSlot(element, true);
+
+            viewSlot.add(view);
+            slot.attached();
+            return viewSlot;
+          }
+        }, {
+          key: 'composeElementInstruction',
+          value: function composeElementInstruction(element, ctx, instruction) {
             instruction.viewSlot = instruction.viewSlot || new ViewSlot(element, true, ctx);
             return this.processInstruction(ctx, instruction);
           }
         }, {
-          key: 'loadTemplate',
-          value: function loadTemplate(urlOrRegistryEntry, associatedModuleId, data) {
-            var _this = this;
-
-            return ensureRegistryEntry(this.loader, urlOrRegistryEntry).then(function (viewRegistryEntry) {
-              if (viewRegistryEntry.isReady) {
-                return viewRegistryEntry.factory;
-              }
-
-              return _this.viewEngine.loadTemplateResources(viewRegistryEntry, associatedModuleId).then(function (resources) {
-                if (viewRegistryEntry.isReady) {
-                  return viewRegistryEntry.factory;
-                }
-
-                viewRegistryEntry.setResources(resources);
-
-                return { template: viewRegistryEntry.template, data: data };
-              });
-            });
-          }
-        }, {
-          key: 'composeBehavior',
-          value: function composeBehavior(container, instruction, ctx) {
+          key: 'composeBehaviorInstruction',
+          value: function composeBehaviorInstruction(container, instruction, ctx) {
             var element = container.get(Element);
 
             var behavior = element.primaryBehavior;
@@ -102,106 +197,25 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
             return this.viewEngine.loadViewFactory(view);
           }
         }, {
-          key: 'composeViewFactory',
-          value: function composeViewFactory(container, ctx, viewFactory) {
-            var viewSlot = container.get(ViewSlot);
-            viewSlot.removeAll();
-            viewSlot.swap(viewFactory.create(container, ctx));
-          }
-        }, {
-          key: 'processElementContents',
-          value: function processElementContents(element) {
-            var behavior = this.element.primaryBehavior;
+          key: 'loadTemplate',
+          value: function loadTemplate(urlOrRegistryEntry, associatedModuleId) {
+            var _this = this;
 
-            if (!behavior) return;
+            return ensureRegistryEntry(this.loader, urlOrRegistryEntry).then(function (viewRegistryEntry) {
+              if (viewRegistryEntry.isReady) {
+                return viewRegistryEntry.factory;
+              }
 
-            if (behavior.viewFactory) return;
+              return _this.viewEngine.loadTemplateResources(viewRegistryEntry, associatedModuleId).then(function (resources) {
+                if (viewRegistryEntry.isReady) {
+                  return viewRegistryEntry.factory;
+                }
 
-            var fragment = document.createDocumentFragment();
-            var c = document.createElement('div');
-            c.innerHTML = this.element.innerHTML;
-            fragment.appendChild(c);
+                viewRegistryEntry.setResources(resources);
 
-            this.element.innerHTML = '';
-
-            var viewFactory = this.viewCompiler.compile(fragment, this.resources);
-            behavior.behavior.viewFactory = viewFactory;
-
-            var view = viewFactory.create(this.container, behavior.executionContext);
-
-            this.viewSlot.add(view);
-            this.viewAttached();
-          }
-        }, {
-          key: 'processBehavior',
-          value: function processBehavior(container) {
-            var element = container.get(Element);
-
-            var i, l;
-
-            var behavior = element.primaryBehavior;
-
-            if (!behavior) return;
-
-            if (behavior.viewFactory) return;
-
-            var viewSlot = container.get(ViewSlot);
-            var resources = container.get(ViewResources);
-
-            var fragment = document.createDocumentFragment();
-
-            var c = document.createElement('div');
-            c.innerHTML = element.innerHTML;
-
-            for (i = 0, l = c.children.length; i < l; i++) {
-              var child = c.children[i];
-              if (child) fragment.appendChild(child);
-            }
-
-            var targets = fragment.querySelectorAll('.au-target');
-            for (i = 0, l = targets.length; i < l; i++) {
-              var target = targets[i];
-              target.classList.remove('au-target');
-            }
-
-            element.innerHTML = '';
-
-            var viewFactory = this.viewCompiler.compile(fragment, resources);
-            behavior.behavior.viewFactory = viewFactory;
-
-            var view = viewFactory.create(container, behavior.executionContext.executionContext || behavior.executionContext);
-            viewSlot.add(view);
-          }
-        }, {
-          key: 'compile',
-          value: function compile(element) {
-            var ctx = arguments[1] === undefined ? null : arguments[1];
-
-            element.classList.remove('au-target');
-            var slot = new ViewSlot(element, true);
-
-            var fragment = document.createDocumentFragment();
-            var c = document.createElement('div');
-            c.innerHTML = element.innerHTML;
-            fragment.appendChild(c);
-
-            var view = this.viewCompiler.compile(fragment, this.resources).create(this.container, ctx);
-            slot.add(view);
-            slot.attached();
-            return slot;
-          }
-        }, {
-          key: 'compile2',
-          value: function compile2(element) {
-            var ctx = arguments[1] === undefined ? null : arguments[1];
-            var viewSlot = arguments[2] === undefined ? null : arguments[2];
-            var template = arguments[3] === undefined ? null : arguments[3];
-
-            element.classList.remove('au-target');
-            var view = this.viewCompiler.compile(template, this.resources).create(this.container, ctx);
-            viewSlot.add(view);
-            if (ctx.viewAttached) ctx.viewAttached();
-            return viewSlot;
+                return viewRegistryEntry;
+              });
+            });
           }
         }, {
           key: 'loadVM',
@@ -222,7 +236,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
           value: function processInstruction(ctx, instruction) {
 
             instruction.container = instruction.container || ctx.container || this.container;
-            instruction.executionContext = instruction.executionContext || ctx.executionContext || ctx || this.executionContext;
+            instruction.executionContext = instruction.executionContext || ctx || this.executionContext;
             instruction.viewSlot = instruction.viewSlot || ctx.viewSlot || this.viewSlot;
             instruction.viewResources = instruction.viewResources || ctx.viewResources || this.viewResources;
             instruction.currentBehavior = instruction.currentBehavior || ctx.currentBehavior || this.currentBehavior;

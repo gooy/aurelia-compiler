@@ -1,0 +1,13 @@
+{
+  "title": "Aurelia Dialog",
+  "github": "gooy/aurelia-dialog",
+  "rootDir": ".",
+  "files": [
+    "index.md",
+    "CHANGELOG.md"
+  ],
+  "links": [
+    ["View on Github", "http://github.com/gooy/aurelia-dialog"],
+    ["Report an issue", "http://github.com/gooy/aurelia-dialog/issues"]
+  ]
+}
