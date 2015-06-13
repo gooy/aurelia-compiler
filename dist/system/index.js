@@ -260,3 +260,4 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
     }
   };
 });
+//# sourceMappingURL=index.js.map
