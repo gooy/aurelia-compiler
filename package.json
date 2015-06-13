@@ -25,8 +25,11 @@
     "jshint": "jshint src task test gulpfile.js"
   },
   "dependencies": {
+    "graceful-fs": "^3.0.8",
     "gulp-git": "^1.2.4",
-    "npm-check-updates": "^1.5.1"
+    "ncp": "^2.0.0",
+    "npm-check-updates": "^1.5.1",
+    "object.assign": "^3.0.0"
   },
   "devDependencies": {
     "aurelia-tools": "^0.1.3",
