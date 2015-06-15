@@ -133,7 +133,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
         if (!viewSlot) viewSlot = new _aureliaFramework.ViewSlot(element, true);
 
         viewSlot.add(view);
-        slot.attached();
+        viewSlot.attached();
         return viewSlot;
       }
     }, {

@@ -155,7 +155,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
             if (!viewSlot) viewSlot = new ViewSlot(element, true);
 
             viewSlot.add(view);
-            slot.attached();
+            viewSlot.attached();
             return viewSlot;
           }
         }, {

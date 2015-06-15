@@ -140,7 +140,7 @@ var Compiler = (function () {
       if (!viewSlot) viewSlot = new _aureliaFramework.ViewSlot(element, true);
 
       viewSlot.add(view);
-      slot.attached();
+      viewSlot.attached();
       return viewSlot;
     }
   }, {
