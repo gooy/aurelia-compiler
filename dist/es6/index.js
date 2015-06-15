@@ -180,12 +180,13 @@ export class Compiler {
 
   /**
    * compose an alement with a new instruction
-   * @param element
-   * @param ctx
-   * @param instruction
+   *
+   * @param element         an HTMLElement where the instuction will be added to.
+   * @param instruction     the instruction to process
+   * @param ctx             an exectution context
    * @returns {*}
    */
-  composeElementInstruction(element,ctx, instruction) {
+  composeElementInstruction(element,instruction,ctx) {
     instruction.viewSlot = instruction.viewSlot ||new ViewSlot(element, true,ctx);
     return this.processInstruction(ctx,instruction);
   }
@@ -193,7 +194,7 @@ export class Compiler {
   /**
    * compose an existing behaviour with a new instruction
    *
-   * @param container       the DI container of the behavior
+   * @param container       the DI container of the behavior (the instruction will be added to it's element)
    * @param instruction     the instruction to process
    * @param ctx             the exectution context
    * @returns {*}
@@ -227,11 +228,11 @@ export class Compiler {
   /**
    * Load a moduleId as plain text
    *
-   * @param view      path to a view file
+   * @param url      path to a view file
    * @returns {String}
    */
-  loadText(view){
-    return this.loader.loadText(view);
+  loadText(url){
+    return this.loader.loadText(url);
   }
 
   /**

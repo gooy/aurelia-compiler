@@ -145,7 +145,7 @@ var Compiler = (function () {
     }
   }, {
     key: 'composeElementInstruction',
-    value: function composeElementInstruction(element, ctx, instruction) {
+    value: function composeElementInstruction(element, instruction, ctx) {
       instruction.viewSlot = instruction.viewSlot || new _aureliaFramework.ViewSlot(element, true, ctx);
       return this.processInstruction(ctx, instruction);
     }
@@ -173,8 +173,8 @@ var Compiler = (function () {
     }
   }, {
     key: 'loadText',
-    value: function loadText(view) {
-      return this.loader.loadText(view);
+    value: function loadText(url) {
+      return this.loader.loadText(url);
     }
   }, {
     key: 'loadViewFactory',

@@ -160,7 +160,7 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
           }
         }, {
           key: 'composeElementInstruction',
-          value: function composeElementInstruction(element, ctx, instruction) {
+          value: function composeElementInstruction(element, instruction, ctx) {
             instruction.viewSlot = instruction.viewSlot || new ViewSlot(element, true, ctx);
             return this.processInstruction(ctx, instruction);
           }
@@ -188,8 +188,8 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
           }
         }, {
           key: 'loadText',
-          value: function loadText(view) {
-            return this.loader.loadText(view);
+          value: function loadText(url) {
+            return this.loader.loadText(url);
           }
         }, {
           key: 'loadViewFactory',
