@@ -15,7 +15,7 @@ Please look at the source code to gain an understanding of how this library work
 Below is some examples and explanation on how some of the methods work.
 
 
-## compile
+### compile
 
 This allows an element to be dynamically created and compiled with Aurelia.
 
@@ -68,7 +68,7 @@ export class TestCustomElement{
 Note: you will most likely want to compile the new view after it has been swapped.
 use the `processBehavior` to do that.
 
-## processBehavior
+### processBehavior
 
 Create a new View from an element's innerHTML and add swap it with current viewslot contents.
 
@@ -90,6 +90,7 @@ export class TestCustomElement{
      });
    }
 }
+```
 
 ### composeElementInstruction
 
