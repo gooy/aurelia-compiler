@@ -4,6 +4,13 @@ A compiler service that compiles an HTML element with aurelia behaviors.
 
 This is used for various methods of dynamically compiling strings, behaviors and instructions with Aurelia.
 
+**NOTE**:
+  
+**This library will be refactored and parts of it will be included into the core**
+
+In the meantime it can still be used but please be aware of this breaking change.
+
+
 ## Installation
 
     jspm install github:gooy/aurelia-compiler
