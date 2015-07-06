@@ -31,7 +31,7 @@ export class Test{
    }
    
    attached(){
-     var el = document.createElement("my-custom-element");
+     var el = document.createElement(this.container,"my-custom-element");
      el.setAttribute("some-option",value);
      this.element.appendChild(el);
      this.compiler.compile(el);
@@ -49,13 +49,15 @@ Loads in a new view for a VM and swaps it with the current view in the viewslot.
 
 ```javascript
 import {Compiler} from 'gooy/aurelia-compiler';
+import {Container} from 'aurelia-framework';
 
 export class TestCustomElement{
    
-   static inject = [Element,Compiler]
+   static inject = [Element,Compiler,Container]
    constructor(element,compiler){
      this.element = element;
      this.compiler = compiler;
+     this.container = container;
    }
    
    attached(){
@@ -82,10 +84,11 @@ export class TestCustomElement{
    constructor(element,compiler){
      this.element = element;
      this.compiler = compiler;
+     this.container = container;
    }
    
    attached(){
-     this.compiler.swapView("some-other-view.html").then(behavior=>{
+     this.compiler.swapView(this.container,"some-other-view.html").then(behavior=>{
         this.compiler.processBehavior(this.container,this);
      });
    }
