@@ -1,7 +1,7 @@
 import {ViewCompiler,CompositionEngine,ViewResources,ViewSlot,ViewEngine, ResourceRegistry , Container} from 'aurelia-framework';
 import {DefaultLoader} from 'aurelia-loader-default';
 import {TemplateRegistryEntry} from 'aurelia-loader';
-import {ContentSelector} from 'aurelia-templating/content-selector';
+import {ContentSelector} from 'aurelia-templating';
 
 /**
  * Compiler service
