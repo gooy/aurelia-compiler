@@ -1,4 +1,4 @@
-System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader', 'aurelia-templating/content-selector'], function (_export) {
+System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader', 'aurelia-templating'], function (_export) {
   'use strict';
 
   var ViewCompiler, CompositionEngine, ViewResources, ViewSlot, ViewEngine, ResourceRegistry, Container, DefaultLoader, TemplateRegistryEntry, ContentSelector, Compiler;
@@ -27,8 +27,8 @@ System.register(['aurelia-framework', 'aurelia-loader-default', 'aurelia-loader'
       DefaultLoader = _aureliaLoaderDefault.DefaultLoader;
     }, function (_aureliaLoader) {
       TemplateRegistryEntry = _aureliaLoader.TemplateRegistryEntry;
-    }, function (_aureliaTemplatingContentSelector) {
-      ContentSelector = _aureliaTemplatingContentSelector.ContentSelector;
+    }, function (_aureliaTemplating) {
+      ContentSelector = _aureliaTemplating.ContentSelector;
     }],
     execute: function () {
       Compiler = (function () {

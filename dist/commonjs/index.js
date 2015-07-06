@@ -14,7 +14,7 @@ var _aureliaLoaderDefault = require('aurelia-loader-default');
 
 var _aureliaLoader = require('aurelia-loader');
 
-var _aureliaTemplatingContentSelector = require('aurelia-templating/content-selector');
+var _aureliaTemplating = require('aurelia-templating');
 
 var Compiler = (function () {
   function Compiler(viewCompiler, compositionEngine, viewEngine, resources, container, loader) {
@@ -113,7 +113,7 @@ var Compiler = (function () {
 
       behavior.view = view;
 
-      _aureliaTemplatingContentSelector.ContentSelector.applySelectors({ fragment: behavior.originalFragment }, view.contentSelectors, function (contentSelector, group) {
+      _aureliaTemplating.ContentSelector.applySelectors({ fragment: behavior.originalFragment }, view.contentSelectors, function (contentSelector, group) {
         return contentSelector.add(group);
       });
       behavior.contentView = behavior.originalView;

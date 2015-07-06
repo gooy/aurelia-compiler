@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loader', 'aurelia-templating/content-selector'], function (exports, _aureliaFramework, _aureliaLoaderDefault, _aureliaLoader, _aureliaTemplatingContentSelector) {
+define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loader', 'aurelia-templating'], function (exports, _aureliaFramework, _aureliaLoaderDefault, _aureliaLoader, _aureliaTemplating) {
   'use strict';
 
   Object.defineProperty(exports, '__esModule', {
@@ -106,7 +106,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
 
         behavior.view = view;
 
-        _aureliaTemplatingContentSelector.ContentSelector.applySelectors({ fragment: behavior.originalFragment }, view.contentSelectors, function (contentSelector, group) {
+        _aureliaTemplating.ContentSelector.applySelectors({ fragment: behavior.originalFragment }, view.contentSelectors, function (contentSelector, group) {
           return contentSelector.add(group);
         });
         behavior.contentView = behavior.originalView;
