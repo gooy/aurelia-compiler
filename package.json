@@ -1,6 +1,6 @@
 {
   "name": "aurelia-compiler",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "registry": "jspm",
   "repository": {
     "type": "git",
@@ -79,9 +79,9 @@
       "lib": "dist/system"
     },
     "dependencies": {
-      "aurelia-loader": "github:aurelia/loader@^0.7.0",
-      "aurelia-loader-default": "github:aurelia/loader-default@^0.8.0",
-      "aurelia-templating": "github:aurelia/templating@^0.12.1"
+      "aurelia-loader": "github:aurelia/loader@^0.8.0",
+      "aurelia-loader-default": "github:aurelia/loader-default@^0.9.0",
+      "aurelia-templating": "github:aurelia/templating@^0.13.1"
     }
   }
 }
