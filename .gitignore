@@ -9,6 +9,7 @@ test
 # IDE generated files #
 #######################
 
+*.iml
 .idea
 .netbeans
 nbproject
