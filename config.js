@@ -21,7 +21,7 @@ System.config({
     "babel": "npm:babel-core@5.6.15",
     "babel-runtime": "npm:babel-runtime@5.6.15",
     "core-js": "npm:core-js@0.9.18",
-    "github:aurelia/binding@0.8.0": {
+    "github:aurelia/binding@0.8.1": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-metadata": "github:aurelia/metadata@0.7.0",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.0",
@@ -45,8 +45,8 @@ System.config({
     "github:aurelia/metadata@0.7.0": {
       "core-js": "npm:core-js@0.9.18"
     },
-    "github:aurelia/templating@0.13.1": {
-      "aurelia-binding": "github:aurelia/binding@0.8.0",
+    "github:aurelia/templating@0.13.2": {
+      "aurelia-binding": "github:aurelia/binding@0.8.1",
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
       "aurelia-loader": "github:aurelia/loader@0.8.0",
