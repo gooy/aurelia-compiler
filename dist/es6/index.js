@@ -1,4 +1,4 @@
-import {ViewCompiler,CompositionEngine,ViewResources,ViewSlot,ViewEngine, ResourceRegistry , Container} from 'aurelia-framework';
+import {ViewCompiler,CompositionEngine,ViewResources,ViewSlot,ViewEngine,Container} from 'aurelia-framework';
 import {DefaultLoader} from 'aurelia-loader-default';
 import {TemplateRegistryEntry} from 'aurelia-loader';
 import {ContentSelector} from 'aurelia-templating';
@@ -9,12 +9,12 @@ import {ContentSelector} from 'aurelia-templating';
  * compiles an HTML element with aurelia
  */
 export class Compiler {
-  static inject() {return [ViewCompiler, CompositionEngine,ViewEngine,ResourceRegistry, Container,DefaultLoader]}
+  static inject() {return [ViewCompiler, CompositionEngine,ViewEngine,ViewResources,Container,DefaultLoader]}
   constructor(viewCompiler, compositionEngine,viewEngine, resources, container,loader) {
     this.viewCompiler = viewCompiler;
     this.viewEngine = viewEngine;
     this.compositionEngine = compositionEngine;
-    this.resources = new ViewResources(resources);
+    this.resources = resources;
     this.container = container;
     this.loader = loader;
   }
