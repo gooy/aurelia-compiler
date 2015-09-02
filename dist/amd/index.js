@@ -10,13 +10,20 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var Compiler = (function () {
+    _createClass(Compiler, null, [{
+      key: 'inject',
+      value: function inject() {
+        return [_aureliaFramework.ViewCompiler, _aureliaFramework.CompositionEngine, _aureliaFramework.ViewEngine, _aureliaFramework.ViewResources, _aureliaFramework.Container, _aureliaLoaderDefault.DefaultLoader];
+      }
+    }]);
+
     function Compiler(viewCompiler, compositionEngine, viewEngine, resources, container, loader) {
       _classCallCheck(this, Compiler);
 
       this.viewCompiler = viewCompiler;
       this.viewEngine = viewEngine;
       this.compositionEngine = compositionEngine;
-      this.resources = new _aureliaFramework.ViewResources(resources);
+      this.resources = resources;
       this.container = container;
       this.loader = loader;
     }
@@ -37,7 +44,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
         return this.loadTemplate(view).then(function (entry) {
           var template = entry.template;
 
-          var data = '';
+          var data = "";
           for (var i = 0, l = template.content.children.length; i < l; i++) {
             var child = template.content.children[i];
             if (child) data += child.outerHTML;
@@ -55,7 +62,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
       value: function createFragment(element) {
         var fragment = document.createDocumentFragment();
 
-        var c = document.createElement('div');
+        var c = document.createElement("div");
         c.innerHTML = element instanceof HTMLElement ? element.innerHTML : element;
 
         var currentChild = c.firstChild,
@@ -98,7 +105,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
 
         var viewFactory = behavior.behavior.viewFactory = this.viewCompiler.compile(fragment, resources);
 
-        element.innerHTML = '';
+        element.innerHTML = "";
 
         var view = viewFactory.create(container, ctx || behavior.executionContext);
         viewSlot.add(view);
@@ -116,15 +123,15 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
     }, {
       key: 'compile',
       value: function compile(element) {
-        var ctx = arguments[1] === undefined ? null : arguments[1];
-        var viewSlot = arguments[2] === undefined ? null : arguments[2];
-        var templateOrFragment = arguments[3] === undefined ? null : arguments[3];
+        var ctx = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+        var viewSlot = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+        var templateOrFragment = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
         element.classList.remove('au-target');
 
         if (!templateOrFragment) {
           var templateOrFragment = document.createDocumentFragment();
-          var c = document.createElement('div');
+          var c = document.createElement("div");
           c.innerHTML = element.innerHTML;
           templateOrFragment.appendChild(c);
         }
@@ -149,7 +156,7 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
 
         var behavior = element.primaryBehavior;
 
-        element.innerHTML = '';
+        element.innerHTML = "";
 
         if (!behavior) return;
         var viewSlot = container.get(_aureliaFramework.ViewSlot);
@@ -223,11 +230,6 @@ define(['exports', 'aurelia-framework', 'aurelia-loader-default', 'aurelia-loade
           ctx.currentBehavior = next;
           ctx.currentViewModel = next ? next.executionContext : null;
         });
-      }
-    }], [{
-      key: 'inject',
-      value: function inject() {
-        return [_aureliaFramework.ViewCompiler, _aureliaFramework.CompositionEngine, _aureliaFramework.ViewEngine, _aureliaFramework.ResourceRegistry, _aureliaFramework.Container, _aureliaLoaderDefault.DefaultLoader];
       }
     }]);
 
