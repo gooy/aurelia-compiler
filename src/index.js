@@ -168,7 +168,10 @@ export class Compiler {
       templateOrFragment.appendChild(c);
     }
     var view = this.viewCompiler.compile(templateOrFragment, this.resources).create(this.container, ctx);
-
+    if(ctx){
+      view.bind(ctx);  
+    }
+    
     if(!viewSlot) viewSlot = new ViewSlot(element, true);
 
     viewSlot.add(view);
